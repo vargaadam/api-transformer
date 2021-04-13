@@ -5,7 +5,6 @@ export default class SportModule extends BaseModule {
   path = '/sports';
   controller;
   service;
-  model;
 
   constructor() {
     super();
