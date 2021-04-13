@@ -7,7 +7,7 @@ export const getEvents = async () => {
   const options = {
     hostname: BASE_URL,
     port: 443,
-    path: '/en-gb/in-play/1/eventss',
+    path: '/en-gb/in-play/1/events',
     method: 'GET'
   };
 
