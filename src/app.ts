@@ -12,7 +12,7 @@ class App<T extends BaseModule> {
   app: Application;
   config: IConfig;
 
-  constructor(Modules: (new () => T)[]) {
+  constructor(Modules: (new (config: IConfig) => T)[]) {
     this.app = express();
     this.config = Config.getConfig();
 
@@ -44,9 +44,9 @@ class App<T extends BaseModule> {
     this.app.use(express.urlencoded({ extended: true }));
   }
 
-  private initializeModules(Modules: (new () => T)[]) {
+  private initializeModules(Modules: (new (config: IConfig) => T)[]) {
     Modules.forEach((Module) => {
-      const module = new Module();
+      const module = new Module(this.config);
       module.initializeRoutes(this.app);
     });
   }
