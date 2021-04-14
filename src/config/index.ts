@@ -5,6 +5,7 @@ export interface IConfig extends CleanedEnvAccessors {
   APP_PORT: number;
   APP_DOMAIN: string;
   NODE_ENV: string;
+  EVENTS_API_BASE_URL: string;
 }
 
 export default class Config {
@@ -15,7 +16,8 @@ export default class Config {
       this.config = cleanEnv(process.env, {
         APP_PORT: num({ default: 3000 }),
         APP_DOMAIN: str({ default: 'localhost' }),
-        NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'], default: 'development' })
+        NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'], default: 'development' }),
+        EVENTS_API_BASE_URL: str({ default: 'partners.betvictor.mobi' })
       });
     }
 
