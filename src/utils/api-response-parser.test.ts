@@ -11,7 +11,7 @@ describe('ApiParser', () => {
           child: [{ childParam: 'childParam' }, { childParam: 'childParam2' }]
         }
       ];
-      const result = parseResponseBody(validDataObjects, ['child'], 0);
+      const result = parseResponseBody(validDataObjects, ['child']);
 
       expect(result).to.eql([{ childParam: 'childParam' }, { childParam: 'childParam2' }]);
     });
@@ -47,7 +47,7 @@ describe('ApiParser', () => {
         }
       ];
 
-      const result = parseResponseBody(validDataObjects, ['child', 'nestedChild'], 0);
+      const result = parseResponseBody(validDataObjects, ['child', 'nestedChild']);
 
       expect(result).to.eql([
         {

@@ -1,25 +1,23 @@
-export const parseResponseBody = (dataObjects: any, keys: string[], index: number) => {
-  let result;
+export const parseResponseBody = (dataObjects: any, keys: string[]) => {
+  let result = dataObjects;
 
-  const key = keys[index];
+  keys.forEach((key) => {
+    if (key) {
+      const childArray = result.map((data) => {
+        if (!data[key]) {
+          throw new Error(`The given ${key} key does not exist in the ${JSON.stringify(data)} object!`);
+        }
 
-  if (key) {
-    const childArray = dataObjects.map((data) => {
-      if (!data[key]) {
-        throw new Error(`The given ${key} key is not exist in the ${JSON.stringify(data)} object !`);
-      }
+        if (!data[key].length) {
+          throw new Error(`The given ${key} key is not an array!`);
+        }
 
-      if (!data[key].length) {
-        throw new Error(`The given ${key} key is not an array!`);
-      }
+        return data[key];
+      });
 
-      return data[key];
-    });
-
-    result = parseResponseBody(childArray.flat(), keys, index + 1);
-  } else if (!result) {
-    result = dataObjects;
-  }
+      result = childArray.flat();
+    }
+  });
 
   return result;
 };
