@@ -49,7 +49,7 @@ describe('SportService', () => {
       expect(res).to.eql(expectedResult);
     });
 
-    it('should call the mockedEventsApi', async () => {
+    it('should call the mockedEventsApi getRawEvents function', async () => {
       await sportService.getAllSports();
 
       expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
