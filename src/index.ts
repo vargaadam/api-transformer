@@ -1,5 +1,7 @@
 import App from './app';
 
-const app = new App([]);
+import SportModule from './modules/sport';
+
+const app = new App([SportModule]);
 
 app.listen();
