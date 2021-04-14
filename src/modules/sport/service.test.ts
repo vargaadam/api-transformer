@@ -28,23 +28,31 @@ describe('SportService', () => {
   });
 
   describe('#getAllSports', () => {
-    it('should return with sports without the competitions', async () => {
-      const expectedResult = [
-        {
-          id: 1,
-          desc: 'Football'
-        },
-        {
-          id: 2,
-          desc: 'Hockey'
-        }
-      ];
+    const expectedResult = [
+      {
+        id: 1,
+        desc: 'Football'
+      },
+      {
+        id: 2,
+        desc: 'Hockey'
+      }
+    ];
 
+    beforeEach(() => {
       mockedEventsApi.getRawEvents.resolves(rawEventsResult);
+    });
 
+    it('should return with sports without the competitions', async () => {
       const res = await sportService.getAllSports();
 
       expect(res).to.eql(expectedResult);
+    });
+
+    it('should call the mockedEventsApi', async () => {
+      await sportService.getAllSports();
+
+      expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
     });
   });
 });
