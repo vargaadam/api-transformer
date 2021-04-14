@@ -13,7 +13,7 @@ export default class EventsApi {
     };
   }
 
-  getRowEvents(): Promise<any> {
+  getRawEvents(): Promise<any> {
     return new Promise((resolve, reject) => {
       const req = https.request(this.options, (res) => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
