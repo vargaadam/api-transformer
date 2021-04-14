@@ -73,7 +73,7 @@ describe('ApiParser', () => {
         }
       ];
 
-      expect(() => parseResponseBody(invalidDataObject, ['notExist'], 0)).to.throw(Error, /not exist/);
+      expect(() => parseResponseBody(invalidDataObject, ['notExist'])).to.throw(Error, /not exist/);
     });
 
     it('should throw an Error when the child key is not an array', () => {
@@ -84,7 +84,7 @@ describe('ApiParser', () => {
         }
       ];
 
-      expect(() => parseResponseBody(invalidDataObject, ['invalidChild'], 0)).to.throw(Error, /invalid/);
+      expect(() => parseResponseBody(invalidDataObject, ['invalidChild'])).to.throw(Error, /invalid/);
     });
   });
 });
