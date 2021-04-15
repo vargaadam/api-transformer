@@ -166,13 +166,13 @@ describe('E2E tests', () => {
           .expect(404, { message: 'There are no events for the given sportId' }, done);
       });
 
-      it('should return with specific sport events if a valid sportId has been given', (done) => {
-        const validSportId = 1;
+      it('should return with specific sport events if the given sportId is exists', (done) => {
+        const sportId = 1;
 
         mockedGetRawEvents.resolves(rawEventsResult);
 
         request(server)
-          .get(`/events?sportId=${validSportId}`)
+          .get(`/events?sportId=${sportId}`)
           .expect(
             200,
             {
@@ -194,6 +194,52 @@ describe('E2E tests', () => {
             },
             done
           );
+      });
+    });
+  });
+
+  describe('#events/:id', () => {
+    describe('GET', () => {
+      it('should return with the event if the given eventId is exists', (done) => {
+        const eventId = 4;
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events/${eventId}`)
+          .expect(
+            200,
+            {
+              result: {
+                event: {
+                  id: 4,
+                  sport_id: 1,
+                  desc: 'eventDesc4'
+                }
+              }
+            },
+            done
+          );
+      });
+
+      it('should return with 400 if the eventId param has wrong type', (done) => {
+        const invalidEventId = 'not-valid';
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events/${invalidEventId}`)
+          .expect(400, { message: 'eventId must be a number string' }, done);
+      });
+
+      it('should return with 404 if the given eventId does not exist', (done) => {
+        const notExistEventId = 69;
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events/${notExistEventId}`)
+          .expect(404, { message: 'There is no event with the given id' }, done);
       });
     });
   });
