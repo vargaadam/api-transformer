@@ -1,3 +1,4 @@
 import HttpException from './HttpException';
+import BadRequestException from './BadRequestException';
 
-export { HttpException };
+export { HttpException, BadRequestException };
