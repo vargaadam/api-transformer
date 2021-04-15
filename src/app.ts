@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import { Server } from 'http';
 
 import helmet from 'helmet';
 import compression from 'compression';
@@ -21,8 +22,8 @@ class App<T extends BaseModule> {
     this.initializeErrorHandling();
   }
 
-  listen() {
-    this.app.listen(this.config.APP_PORT, () => {
+  listen(): Server {
+    return this.app.listen(this.config.APP_PORT, () => {
       console.log(`server started at http://localhost:${this.config.APP_PORT}`);
     });
   }
