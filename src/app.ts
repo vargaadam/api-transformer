@@ -6,7 +6,7 @@ import compression from 'compression';
 import cors from 'cors';
 
 import Config, { IConfig } from './config';
-import { errorMiddleware } from './middlewares';
+import { errorMiddleware, i18nMiddleware } from './middlewares';
 import { BaseModule } from './modules';
 
 class App<T extends BaseModule> {
@@ -43,6 +43,7 @@ class App<T extends BaseModule> {
     this.app.use(compression());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(i18nMiddleware);
   }
 
   private initializeModules(Modules: (new (config: IConfig) => T)[]) {
