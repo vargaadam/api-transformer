@@ -1,21 +1,24 @@
 import https, { RequestOptions } from 'https';
 import { HttpException } from '../exceptions';
+import { ELanguages } from '../interfaces';
 
 export default class EventsApi {
-  options: RequestOptions;
+  baseUrl: string;
 
   constructor(baseUrl) {
-    this.options = {
-      hostname: baseUrl,
-      port: 443,
-      path: '/en-gb/in-play/1/events',
-      method: 'GET'
-    };
+    this.baseUrl = baseUrl;
   }
 
-  getRawEvents(): Promise<any> {
+  getRawEvents(lang: ELanguages = ELanguages.ENGLISH): Promise<any> {
+    const options: RequestOptions = {
+      hostname: this.baseUrl,
+      port: 443,
+      path: `/${lang}/in-play/1/events`,
+      method: 'GET'
+    };
+
     return new Promise((resolve, reject) => {
-      const req = https.request(this.options, (res) => {
+      const req = https.request(options, (res) => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
           return reject(new HttpException(res.statusCode, res.statusMessage));
         }
