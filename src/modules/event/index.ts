@@ -6,7 +6,7 @@ import { validationMiddleware } from '../../middlewares';
 
 import EventsApi from '../../api/events-api';
 
-import { GetEventsQueryDto } from './dto';
+import { GetEventByIdParamDto, GetEventsQueryDto } from './dto';
 import EventService from './service';
 import EventController from './controller';
 
@@ -27,5 +27,11 @@ export default class EventsModule extends BaseModule {
 
   initializeRoutes(app: Application) {
     app.get(this.path, validationMiddleware([{ type: GetEventsQueryDto, value: 'query' }]), this.controller.getEvents);
+
+    app.get(
+      `${this.path}/:eventId`,
+      validationMiddleware([{ type: GetEventByIdParamDto, value: 'params' }]),
+      this.controller.getEventById
+    );
   }
 }
