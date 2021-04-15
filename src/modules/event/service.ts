@@ -2,7 +2,7 @@ import EventsApi from '../../api/events-api';
 import { NotFoundException } from '../../exceptions';
 import { parseResponseBody } from '../../utils/api-response-parser';
 
-import { IEventResult } from './interface';
+import { IEvent, IEventResult } from './interface';
 
 export default class EventService {
   eventsApi: EventsApi;
@@ -28,5 +28,19 @@ export default class EventService {
       total_number_of_events: events.length,
       events
     };
+  }
+
+  async getEventById(eventId: number): Promise<IEvent> {
+    const { result } = await this.eventsApi.getRawEvents();
+
+    const events = parseResponseBody(result.sports, ['comp', 'events']);
+
+    const foundEvent = events.find((event) => event.id === eventId);
+
+    if (!foundEvent) {
+      throw new NotFoundException(`There is no event with the given id`);
+    }
+
+    return foundEvent;
   }
 }

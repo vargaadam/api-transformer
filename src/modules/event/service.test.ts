@@ -65,13 +65,11 @@ describe('EventService', () => {
   beforeEach(() => {
     mockedEventsApi = sinon.createStubInstance(EventsApi);
     eventService = new EventService(mockedEventsApi);
+
+    mockedEventsApi.getRawEvents.resolves(rawEventsResult);
   });
 
   describe('#getAllEvents', () => {
-    beforeEach(() => {
-      mockedEventsApi.getRawEvents.resolves(rawEventsResult);
-    });
-
     it('should return with events without the competitions', async () => {
       const expectedResult = {
         total_number_of_events: 4,
@@ -130,6 +128,22 @@ describe('EventService', () => {
       const sportId = 1;
 
       const result = await eventService.getAllEvents(sportId);
+
+      expect(result).to.eql(expectedResult);
+    });
+  });
+
+  describe('#getEventById', () => {
+    it('should return with the event based on the specified id', async () => {
+      const eventId = 4;
+
+      const expectedResult = {
+        id: 4,
+        sport_id: 1,
+        desc: 'eventDesc4'
+      };
+
+      const result = await eventService.getEventById(eventId);
 
       expect(result).to.eql(expectedResult);
     });
