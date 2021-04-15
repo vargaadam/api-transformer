@@ -13,3 +13,8 @@ export interface ISport extends IOrder {
   hasInplayEvents: boolean;
   hasUpcomingEvents: boolean;
 }
+
+export interface ISportResult {
+  total_number_of_events: number;
+  sports: ISport[];
+}

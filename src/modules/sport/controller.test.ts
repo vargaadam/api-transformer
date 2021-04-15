@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { mockReq, mockRes } from 'sinon-express-mock';
 import { expect } from 'chai';
-import sinon, { SinonStubbedInstance } from 'sinon';
+import sinon, { SinonStub, SinonStubbedInstance } from 'sinon';
 
-import { ISport } from './interface';
+import { ISportResult } from './interface';
 import SportService from './service';
 import SportController from './controller';
 
@@ -12,7 +12,21 @@ let sportController: SportController;
 
 let mockedReq: Request;
 let mockedRes: Response;
-let mockedNext;
+let mockedNext: SinonStub;
+
+const getAllSportResult = {
+  total_number_of_events: 2,
+  sports: [
+    {
+      id: 1,
+      desc: 'Football'
+    },
+    {
+      id: 2,
+      desc: 'Hockey'
+    }
+  ]
+} as ISportResult;
 
 describe('SportController', () => {
   beforeEach(() => {
@@ -25,19 +39,8 @@ describe('SportController', () => {
   });
 
   describe('#getSports', () => {
-    const expectedResult = [
-      {
-        id: 1,
-        desc: 'Football'
-      },
-      {
-        id: 2,
-        desc: 'Hockey'
-      }
-    ] as ISport[];
-
     it('should call the mockedRes status function with 200', async () => {
-      mockedSportService.getAllSports.resolves(expectedResult);
+      mockedSportService.getAllSports.resolves(getAllSportResult);
 
       await sportController.getSports(mockedReq, mockedRes, mockedNext);
 
@@ -45,11 +48,11 @@ describe('SportController', () => {
     });
 
     it('should append the response with all the sports', async () => {
-      mockedSportService.getAllSports.resolves(expectedResult);
+      mockedSportService.getAllSports.resolves(getAllSportResult);
 
       await sportController.getSports(mockedReq, mockedRes, mockedNext);
 
-      expect(mockedRes.send).to.have.been.calledWith({ data: expectedResult });
+      expect(mockedRes.send).to.have.been.calledWith({ result: getAllSportResult });
     });
 
     it('should call the mockedNext if the getAllSports function rejects', async () => {

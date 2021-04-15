@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { mockReq, mockRes } from 'sinon-express-mock';
 
-import { ISport } from './interface';
+import { ISportResult } from './interface';
 import SportService from './service';
 
 export default class SportController {
@@ -13,9 +12,9 @@ export default class SportController {
 
   getSports = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const foundSports: ISport[] = await this.sportService.getAllSports();
+      const foundSports: ISportResult = await this.sportService.getAllSports();
 
-      res.status(200).send({ data: foundSports });
+      res.status(200).send({ result: foundSports });
     } catch (error) {
       next(error);
     }

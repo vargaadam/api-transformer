@@ -1,5 +1,5 @@
 import EventsApi from '../../api/events-api';
-import { ISport } from './interface';
+import { ISportResult } from './interface';
 
 export default class SportService {
   eventsApi: EventsApi;
@@ -8,13 +8,18 @@ export default class SportService {
     this.eventsApi = eventsApi;
   }
 
-  async getAllSports(): Promise<ISport[]> {
+  async getAllSports(): Promise<ISportResult> {
     const { result } = await this.eventsApi.getRawEvents();
 
-    return result.sports.map((rawEvent) => {
+    const sports = result.sports.map((rawEvent) => {
       const { comp, ...sport } = rawEvent;
 
       return sport;
     });
+
+    return {
+      total_number_of_events: result.total_number_of_events,
+      sports
+    };
   }
 }
