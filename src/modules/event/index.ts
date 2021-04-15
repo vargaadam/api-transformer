@@ -2,9 +2,11 @@ import { Application } from 'express';
 import { BaseModule } from '..';
 
 import { IConfig } from '../../config';
+import { validationMiddleware } from '../../middlewares';
 
 import EventsApi from '../../api/events-api';
 
+import { FindEventsQueryDto } from './dto';
 import EventService from './service';
 import EventController from './controller';
 
@@ -24,6 +26,6 @@ export default class EventsModule extends BaseModule {
   }
 
   initializeRoutes(app: Application) {
-    app.get(this.path, this.controller.getEvents);
+    app.get(this.path, validationMiddleware([{ type: FindEventsQueryDto, value: 'query' }]), this.controller.getEvents);
   }
 }
