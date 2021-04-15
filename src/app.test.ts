@@ -13,8 +13,6 @@ import { ELanguages } from './interfaces';
 let app: App<BaseModule>;
 let server: Server;
 
-let mockedGetRawEvents: SinonStub;
-
 const rawEventsResult = {
   status: {},
   result: {
