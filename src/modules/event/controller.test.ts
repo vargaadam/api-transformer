@@ -63,12 +63,28 @@ describe('EventController', () => {
       expect(mockedRes.send).to.have.been.calledWith({ result: getAllEventResult });
     });
 
-    it('should call the mockedNext if the getAllEvents function rejects', async () => {
+    it('should call mockedNext if the getAllEvents function rejects', async () => {
       mockedEventService.getAllEvents.rejects();
 
       await eventController.getEvents(mockedReq, mockedRes, mockedNext);
 
       expect(mockedNext).to.have.been.calledOnce;
+    });
+
+    it('should call mockedEventService getAllEvents function with the sportId if it has been given as a query param', async () => {
+      const sportId = 1;
+
+      mockedReq = mockReq({
+        query: {
+          sportId
+        }
+      });
+
+      mockedEventService.getAllEvents.resolves(getAllEventResult);
+
+      await eventController.getEvents(mockedReq, mockedRes, mockedNext);
+
+      expect(mockedEventService.getAllEvents).to.have.been.calledWith(sportId);
     });
   });
 });
