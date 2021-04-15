@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
 import EventsApi from '../../api/events-api';
+import { NotFoundException } from '../../exceptions';
 
 import EventService from './service';
 
@@ -131,6 +132,15 @@ describe('EventService', () => {
 
       expect(result).to.eql(expectedResult);
     });
+
+    it('should throw NotFoundException if there is no event to return for the given sportId', async () => {
+      const sportId = 69;
+
+      return expect(eventService.getAllEvents(sportId)).to.rejectedWith(
+        NotFoundException,
+        'There are no events for the given sportId'
+      );
+    });
   });
 
   describe('#getEventById', () => {
@@ -146,6 +156,23 @@ describe('EventService', () => {
       const result = await eventService.getEventById(eventId);
 
       expect(result).to.eql(expectedResult);
+    });
+
+    it('should call the mockedEventsApi getRawEvents function', async () => {
+      const eventId = 4;
+
+      await eventService.getEventById(eventId);
+
+      expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
+    });
+
+    it('should throw NotFoundException if there is no event to return', async () => {
+      const eventId = 69;
+
+      return expect(eventService.getEventById(eventId)).to.rejectedWith(
+        NotFoundException,
+        'There is no event with the given id'
+      );
     });
   });
 });
