@@ -29,10 +29,12 @@ const rawEventsResult = {
             events: [
               {
                 id: 1,
+                sport_id: 1,
                 desc: 'eventDesc1'
               },
               {
                 id: 2,
+                sport_id: 2,
                 desc: 'eventDesc2'
               }
             ]
@@ -49,10 +51,12 @@ const rawEventsResult = {
             events: [
               {
                 id: 3,
+                sport_id: 2,
                 desc: 'eventDesc3'
               },
               {
                 id: 4,
+                sport_id: 1,
                 desc: 'eventDesc4'
               }
             ]
@@ -117,18 +121,72 @@ describe('E2E tests', () => {
                 events: [
                   {
                     id: 1,
+                    sport_id: 1,
                     desc: 'eventDesc1'
                   },
                   {
                     id: 2,
+                    sport_id: 2,
                     desc: 'eventDesc2'
                   },
                   {
                     id: 3,
+                    sport_id: 2,
                     desc: 'eventDesc3'
                   },
                   {
                     id: 4,
+                    sport_id: 1,
+                    desc: 'eventDesc4'
+                  }
+                ]
+              }
+            },
+            done
+          );
+      });
+
+      it('should return with 400 if the sportId query param has wrong type', (done) => {
+        const invalidSportId = 'not-valid';
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events?sportId=${invalidSportId}`)
+          .expect(400, { message: 'sportId must be a number string' }, done);
+      });
+
+      it('should return with 404 if the given sportId does not exist', (done) => {
+        const notExistSportId = 69;
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events?sportId=${notExistSportId}`)
+          .expect(404, { message: 'There are no events for the given sportId' }, done);
+      });
+
+      it('should return with specific sport events if a valid sportId has been given', (done) => {
+        const validSportId = 1;
+
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get(`/events?sportId=${validSportId}`)
+          .expect(
+            200,
+            {
+              result: {
+                total_number_of_events: 2,
+                events: [
+                  {
+                    id: 1,
+                    sport_id: 1,
+                    desc: 'eventDesc1'
+                  },
+                  {
+                    id: 4,
+                    sport_id: 1,
                     desc: 'eventDesc4'
                   }
                 ]
