@@ -10,13 +10,17 @@ export default class EventService {
     this.eventsApi = eventsApi;
   }
 
-  async getAllEvents(): Promise<IEventResult> {
+  async getAllEvents(sportId?: number): Promise<IEventResult> {
     const { result } = await this.eventsApi.getRawEvents();
 
-    const events = parseResponseBody(result.sports, ['comp', 'events']);
+    let events = parseResponseBody(result.sports, ['comp', 'events']);
+
+    if (sportId) {
+      events = events.filter((event) => event.sport_id === sportId);
+    }
 
     return {
-      total_number_of_events: result.total_number_of_events,
+      total_number_of_events: events.length,
       events
     };
   }

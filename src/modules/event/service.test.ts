@@ -23,10 +23,12 @@ const rawEventsResult = {
             events: [
               {
                 id: 1,
+                sport_id: 1,
                 desc: 'eventDesc1'
               },
               {
                 id: 2,
+                sport_id: 2,
                 desc: 'eventDesc2'
               }
             ]
@@ -43,10 +45,12 @@ const rawEventsResult = {
             events: [
               {
                 id: 3,
+                sport_id: 2,
                 desc: 'eventDesc3'
               },
               {
                 id: 4,
+                sport_id: 1,
                 desc: 'eventDesc4'
               }
             ]
@@ -64,33 +68,37 @@ describe('EventService', () => {
   });
 
   describe('#getAllEvents', () => {
-    const expectedResult = {
-      total_number_of_events: 4,
-      events: [
-        {
-          id: 1,
-          desc: 'eventDesc1'
-        },
-        {
-          id: 2,
-          desc: 'eventDesc2'
-        },
-        {
-          id: 3,
-          desc: 'eventDesc3'
-        },
-        {
-          id: 4,
-          desc: 'eventDesc4'
-        }
-      ]
-    };
-
     beforeEach(() => {
       mockedEventsApi.getRawEvents.resolves(rawEventsResult);
     });
 
-    it('should return with sports without the competitions', async () => {
+    it('should return with events without the competitions', async () => {
+      const expectedResult = {
+        total_number_of_events: 4,
+        events: [
+          {
+            id: 1,
+            sport_id: 1,
+            desc: 'eventDesc1'
+          },
+          {
+            id: 2,
+            sport_id: 2,
+            desc: 'eventDesc2'
+          },
+          {
+            id: 3,
+            sport_id: 2,
+            desc: 'eventDesc3'
+          },
+          {
+            id: 4,
+            sport_id: 1,
+            desc: 'eventDesc4'
+          }
+        ]
+      };
+
       const res = await eventService.getAllEvents();
 
       expect(res).to.eql(expectedResult);
@@ -100,6 +108,30 @@ describe('EventService', () => {
       await eventService.getAllEvents();
 
       expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
+    });
+
+    it('should return with specific sport events if the sportId param has been given', async () => {
+      const expectedResult = {
+        total_number_of_events: 2,
+        events: [
+          {
+            id: 1,
+            sport_id: 1,
+            desc: 'eventDesc1'
+          },
+          {
+            id: 4,
+            sport_id: 1,
+            desc: 'eventDesc4'
+          }
+        ]
+      };
+
+      const sportId = 1;
+
+      const result = await eventService.getAllEvents(sportId);
+
+      expect(result).to.eql(expectedResult);
     });
   });
 });
