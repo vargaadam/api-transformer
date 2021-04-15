@@ -8,18 +8,23 @@ import SportService from './service';
 let mockedEventsApi: SinonStubbedInstance<EventsApi>;
 let sportService: SportService;
 
-const rawEventsResult = [
-  {
-    id: 1,
-    desc: 'Football',
-    comp: []
-  },
-  {
-    id: 2,
-    desc: 'Hockey',
-    comp: []
+const rawEventsResult = {
+  status: {},
+  result: {
+    sports: [
+      {
+        id: 1,
+        desc: 'Football',
+        comp: []
+      },
+      {
+        id: 2,
+        desc: 'Hockey',
+        comp: []
+      }
+    ]
   }
-];
+};
 
 describe('SportService', () => {
   beforeEach(() => {

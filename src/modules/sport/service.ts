@@ -9,9 +9,9 @@ export default class SportService {
   }
 
   async getAllSports(): Promise<ISport[]> {
-    const rawEvents = await this.eventsApi.getRawEvents();
+    const { result } = await this.eventsApi.getRawEvents();
 
-    return rawEvents.map((rawEvent) => {
+    return result.sports.map((rawEvent) => {
       const { comp, ...sport } = rawEvent;
 
       return sport;
