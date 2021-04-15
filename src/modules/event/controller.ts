@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { FindEventsQueryDto as GetEventsQueryDto } from './dto';
+import { GetEventsQueryDto, GetEventByIdParamDto } from './dto';
 
-import { IEventResult } from './interface';
+import { IEvent, IEventResult } from './interface';
 import EventService from './service';
 
 export default class SportController {
@@ -18,6 +18,18 @@ export default class SportController {
       const foundEvents: IEventResult = await this.eventService.getAllEvents(Number(getEventsQuery.sportId));
 
       res.status(200).send({ result: foundEvents });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getEventById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const getEventByIdParam = (req.params as unknown) as GetEventByIdParamDto;
+
+      const foundEvent: IEvent = await this.eventService.getEventById(Number(getEventByIdParam.eventId));
+
+      res.status(200).send({ result: foundEvent });
     } catch (error) {
       next(error);
     }

@@ -1,7 +1,12 @@
 import { IsNumberString, IsOptional } from 'class-validator';
 
-export class FindEventsQueryDto {
+export class GetEventsQueryDto {
   @IsNumberString()
   @IsOptional()
   sportId: string;
+}
+
+export class GetEventByIdParamDto {
+  @IsNumberString()
+  eventId: string;
 }
