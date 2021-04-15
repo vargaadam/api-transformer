@@ -34,19 +34,16 @@ describe('SportService', () => {
   });
 
   describe('#getAllSports', () => {
-    const expectedResult = {
-      total_number_of_events: 2,
-      sports: [
-        {
-          id: 1,
-          desc: 'Football'
-        },
-        {
-          id: 2,
-          desc: 'Hockey'
-        }
-      ]
-    };
+    const expectedResult = [
+      {
+        id: 1,
+        desc: 'Football'
+      },
+      {
+        id: 2,
+        desc: 'Hockey'
+      }
+    ];
 
     beforeEach(() => {
       mockedEventsApi.getRawEvents.resolves(rawEventsResult);

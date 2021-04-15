@@ -16,7 +16,6 @@ let mockedGetRawEvents: SinonStub;
 const rawEventsResult = {
   status: {},
   result: {
-    total_number_of_events: 2,
     sports: [
       {
         id: 1,
@@ -51,7 +50,6 @@ describe('E2E tests', () => {
             200,
             {
               result: {
-                total_number_of_events: 2,
                 sports: [
                   {
                     id: 1,

@@ -3,7 +3,7 @@ import { mockReq, mockRes } from 'sinon-express-mock';
 import { expect } from 'chai';
 import sinon, { SinonStub, SinonStubbedInstance } from 'sinon';
 
-import { ISportResult } from './interface';
+import { ISport } from './interface';
 import SportService from './service';
 import SportController from './controller';
 
@@ -14,19 +14,16 @@ let mockedReq: Request;
 let mockedRes: Response;
 let mockedNext: SinonStub;
 
-const getAllSportResult = {
-  total_number_of_events: 2,
-  sports: [
-    {
-      id: 1,
-      desc: 'Football'
-    },
-    {
-      id: 2,
-      desc: 'Hockey'
-    }
-  ]
-} as ISportResult;
+const getAllSportResult = [
+  {
+    id: 1,
+    desc: 'Football'
+  },
+  {
+    id: 2,
+    desc: 'Hockey'
+  }
+] as ISport[];
 
 describe('SportController', () => {
   beforeEach(() => {
@@ -52,7 +49,7 @@ describe('SportController', () => {
 
       await sportController.getSports(mockedReq, mockedRes, mockedNext);
 
-      expect(mockedRes.send).to.have.been.calledWith({ result: getAllSportResult });
+      expect(mockedRes.send).to.have.been.calledWith({ result: { sports: getAllSportResult } });
     });
 
     it('should call the mockedNext if the getAllSports function rejects', async () => {
