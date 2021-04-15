@@ -26,7 +26,11 @@ export default class EventsModule extends BaseModule {
   }
 
   initializeRoutes(app: Application) {
-    app.get(this.path, validationMiddleware([{ type: GetEventsQueryDto, value: 'query' }]), this.controller.getEvents);
+    app.get(
+      this.path,
+      validationMiddleware([{ type: GetEventsQueryDto, value: 'query' }], true, false, false),
+      this.controller.getEvents
+    );
 
     app.get(
       `${this.path}/:eventId`,
