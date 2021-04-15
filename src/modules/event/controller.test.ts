@@ -107,7 +107,7 @@ describe('EventController', () => {
 
       await eventController.getEventById(mockedReq, mockedRes, mockedNext);
 
-      expect(mockedRes.send).to.have.been.calledWith({ result: getEventByIdResult });
+      expect(mockedRes.send).to.have.been.calledWith({ result: { event: getEventByIdResult } });
     });
 
     it('should call mockedNext if the getEventById function rejects', async () => {

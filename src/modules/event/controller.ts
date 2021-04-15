@@ -15,9 +15,9 @@ export default class SportController {
     try {
       const getEventsQuery = (req.query as unknown) as GetEventsQueryDto;
 
-      const foundEvents: IEventResult = await this.eventService.getAllEvents(Number(getEventsQuery.sportId));
+      const foundEventResult: IEventResult = await this.eventService.getAllEvents(Number(getEventsQuery.sportId));
 
-      res.status(200).send({ result: foundEvents });
+      res.status(200).send({ result: foundEventResult });
     } catch (error) {
       next(error);
     }
@@ -29,7 +29,7 @@ export default class SportController {
 
       const foundEvent: IEvent = await this.eventService.getEventById(Number(getEventByIdParam.eventId));
 
-      res.status(200).send({ result: foundEvent });
+      res.status(200).send({ result: { event: foundEvent } });
     } catch (error) {
       next(error);
     }
