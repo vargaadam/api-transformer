@@ -5,11 +5,12 @@ import { IConfig } from '../../config';
 
 import EventsApi from '../../api/events-api';
 import SportService from './service';
+import SportController from './controller';
 
 export default class SportModule extends BaseModule {
   path = '/sports';
-  controller;
-  service;
+  controller: SportController;
+  service: SportService;
   eventsApi: EventsApi;
 
   constructor(config: IConfig) {
@@ -17,7 +18,10 @@ export default class SportModule extends BaseModule {
 
     this.eventsApi = new EventsApi(config.EVENTS_API_BASE_URL);
     this.service = new SportService(this.eventsApi);
+    this.controller = new SportController(this.service);
   }
 
-  initializeRoutes(app: Application) {}
+  initializeRoutes(app: Application) {
+    app.get(this.path, this.controller.getSports);
+  }
 }
