@@ -1,4 +1,5 @@
 import EventsApi from '../../api/events-api';
+import { NotFoundException } from '../../exceptions';
 import { parseResponseBody } from '../../utils/api-response-parser';
 
 import { IEventResult } from './interface';
@@ -17,6 +18,10 @@ export default class EventService {
 
     if (sportId) {
       events = events.filter((event) => event.sport_id === sportId);
+
+      if (events.length < 1) {
+        throw new NotFoundException(`There are no events for the given sportId`);
+      }
     }
 
     return {
