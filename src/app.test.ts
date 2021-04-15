@@ -8,6 +8,7 @@ import EventsApi from './api/events-api';
 import { BaseModule } from './modules';
 import SportModule from './modules/sport';
 import EventModule from './modules/event';
+import { ELanguages } from './interfaces';
 
 let app: App<BaseModule>;
 let server: Server;
@@ -74,14 +75,31 @@ describe('E2E tests', () => {
   });
 
   beforeEach(() => {
-    mockedGetRawEvents = sinon.stub(EventsApi.prototype, 'getRawEvents');
+    sinon.stub(EventsApi.prototype, 'getRawEvents').resolves(rawEventsResult);
+  });
+
+  describe('i18n tests', () => {
+    ['/sports', '/events', '/events/1'].forEach((route) => {
+      describe(`#${route}`, () => {
+        [
+          { lang: ELanguages.ENGLISH, expect: [200] },
+          { lang: ELanguages.GERMAN, expect: [200] },
+          { lang: ELanguages.CHINESE, expect: [200] },
+          { lang: 'not-supported', expect: [400, { message: 'Not supported language!' }] }
+        ].forEach((i18nTest) => {
+          it(`should return with ${i18nTest.expect[0]} when the lang query param set to ${i18nTest.lang}`, (done) => {
+            request(server)
+              .get(`${route}?lang=${i18nTest.lang}`)
+              .expect(...i18nTest.expect, done);
+          });
+        });
+      });
+    });
   });
 
   describe('#/sports', () => {
     describe('GET', () => {
       it('should return all the sport with status 200', (done) => {
-        mockedGetRawEvents.resolves(rawEventsResult);
-
         request(server)
           .get('/sports')
           .expect(
@@ -109,8 +127,6 @@ describe('E2E tests', () => {
   describe('#/events', () => {
     describe('GET', () => {
       it('should return all the sport with status 200', (done) => {
-        mockedGetRawEvents.resolves(rawEventsResult);
-
         request(server)
           .get('/events')
           .expect(
@@ -149,8 +165,6 @@ describe('E2E tests', () => {
       it('should return with 400 if the sportId query param has wrong type', (done) => {
         const invalidSportId = 'not-valid';
 
-        mockedGetRawEvents.resolves(rawEventsResult);
-
         request(server)
           .get(`/events?sportId=${invalidSportId}`)
           .expect(400, { message: 'sportId must be a number string' }, done);
@@ -159,8 +173,6 @@ describe('E2E tests', () => {
       it('should return with 404 if the given sportId does not exist', (done) => {
         const notExistSportId = 69;
 
-        mockedGetRawEvents.resolves(rawEventsResult);
-
         request(server)
           .get(`/events?sportId=${notExistSportId}`)
           .expect(404, { message: 'There are no events for the given sportId' }, done);
@@ -168,8 +180,6 @@ describe('E2E tests', () => {
 
       it('should return with specific sport events if the given sportId is exists', (done) => {
         const sportId = 1;
-
-        mockedGetRawEvents.resolves(rawEventsResult);
 
         request(server)
           .get(`/events?sportId=${sportId}`)
@@ -198,12 +208,10 @@ describe('E2E tests', () => {
     });
   });
 
-  describe('#events/:id', () => {
+  describe('#/events/:eventId', () => {
     describe('GET', () => {
       it('should return with the event if the given eventId is exists', (done) => {
         const eventId = 4;
-
-        mockedGetRawEvents.resolves(rawEventsResult);
 
         request(server)
           .get(`/events/${eventId}`)
@@ -225,8 +233,6 @@ describe('E2E tests', () => {
       it('should return with 400 if the eventId param has wrong type', (done) => {
         const invalidEventId = 'not-valid';
 
-        mockedGetRawEvents.resolves(rawEventsResult);
-
         request(server)
           .get(`/events/${invalidEventId}`)
           .expect(400, { message: 'eventId must be a number string' }, done);
@@ -234,8 +240,6 @@ describe('E2E tests', () => {
 
       it('should return with 404 if the given eventId does not exist', (done) => {
         const notExistEventId = 69;
-
-        mockedGetRawEvents.resolves(rawEventsResult);
 
         request(server)
           .get(`/events/${notExistEventId}`)
