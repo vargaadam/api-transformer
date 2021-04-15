@@ -1,5 +1,6 @@
 import EventsApi from '../../api/events-api';
 import { NotFoundException } from '../../exceptions';
+import { ELanguages } from '../../interfaces';
 import { parseResponseBody } from '../../utils/api-response-parser';
 
 import { IEvent, IEventResult } from './interface';
@@ -11,8 +12,8 @@ export default class EventService {
     this.eventsApi = eventsApi;
   }
 
-  async getAllEvents(sportId?: number): Promise<IEventResult> {
-    const { result } = await this.eventsApi.getRawEvents();
+  async getAllEvents(sportId?: number, lang?: ELanguages): Promise<IEventResult> {
+    const { result } = await this.eventsApi.getRawEvents(lang);
 
     let events = parseResponseBody(result.sports, ['comp', 'events']);
 
@@ -30,8 +31,8 @@ export default class EventService {
     };
   }
 
-  async getEventById(eventId: number): Promise<IEvent> {
-    const { result } = await this.eventsApi.getRawEvents();
+  async getEventById(eventId: number, lang?: ELanguages): Promise<IEvent> {
+    const { result } = await this.eventsApi.getRawEvents(lang);
 
     const events = parseResponseBody(result.sports, ['comp', 'events']);
 

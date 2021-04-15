@@ -1,4 +1,5 @@
 import EventsApi from '../../api/events-api';
+import { ELanguages } from '../../interfaces';
 import { ISport } from './interface';
 
 export default class SportService {
@@ -8,8 +9,8 @@ export default class SportService {
     this.eventsApi = eventsApi;
   }
 
-  async getAllSports(): Promise<ISport[]> {
-    const { result } = await this.eventsApi.getRawEvents();
+  async getAllSports(lang?: ELanguages): Promise<ISport[]> {
+    const { result } = await this.eventsApi.getRawEvents(lang);
 
     return result.sports.map((rawEvent) => {
       const { comp, ...sport } = rawEvent;
