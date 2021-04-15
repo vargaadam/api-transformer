@@ -23,5 +23,7 @@ export default class EventsModule extends BaseModule {
     this.controller = new EventController(this.service);
   }
 
-  initializeRoutes(app: Application) {}
+  initializeRoutes(app: Application) {
+    app.get(this.path, this.controller.getEvents);
+  }
 }

@@ -7,6 +7,7 @@ import EventsApi from './api/events-api';
 
 import { BaseModule } from './modules';
 import SportModule from './modules/sport';
+import EventModule from './modules/event';
 
 let app: App<BaseModule>;
 let server: Server;
@@ -16,16 +17,47 @@ let mockedGetRawEvents: SinonStub;
 const rawEventsResult = {
   status: {},
   result: {
+    total_number_of_events: 4,
     sports: [
       {
         id: 1,
         desc: 'Football',
-        comp: []
+        comp: [
+          {
+            id: 1,
+            desc: 'compDesc2',
+            events: [
+              {
+                id: 1,
+                desc: 'eventDesc1'
+              },
+              {
+                id: 2,
+                desc: 'eventDesc2'
+              }
+            ]
+          }
+        ]
       },
       {
         id: 2,
         desc: 'Hockey',
-        comp: []
+        comp: [
+          {
+            id: 2,
+            desc: 'compDesc2',
+            events: [
+              {
+                id: 3,
+                desc: 'eventDesc3'
+              },
+              {
+                id: 4,
+                desc: 'eventDesc4'
+              }
+            ]
+          }
+        ]
       }
     ]
   }
@@ -33,10 +65,12 @@ const rawEventsResult = {
 
 describe('E2E tests', () => {
   before(() => {
-    mockedGetRawEvents = sinon.stub(EventsApi.prototype, 'getRawEvents');
-
-    app = new App([SportModule]);
+    app = new App<BaseModule>([SportModule, EventModule]);
     server = app.listen();
+  });
+
+  beforeEach(() => {
+    mockedGetRawEvents = sinon.stub(EventsApi.prototype, 'getRawEvents');
   });
 
   describe('#/sports', () => {
@@ -58,6 +92,44 @@ describe('E2E tests', () => {
                   {
                     id: 2,
                     desc: 'Hockey'
+                  }
+                ]
+              }
+            },
+            done
+          );
+      });
+    });
+  });
+
+  describe('#/events', () => {
+    describe('GET', () => {
+      it('should return all the sport with status 200', (done) => {
+        mockedGetRawEvents.resolves(rawEventsResult);
+
+        request(server)
+          .get('/events')
+          .expect(
+            200,
+            {
+              result: {
+                total_number_of_events: 4,
+                events: [
+                  {
+                    id: 1,
+                    desc: 'eventDesc1'
+                  },
+                  {
+                    id: 2,
+                    desc: 'eventDesc2'
+                  },
+                  {
+                    id: 3,
+                    desc: 'eventDesc3'
+                  },
+                  {
+                    id: 4,
+                    desc: 'eventDesc4'
                   }
                 ]
               }
