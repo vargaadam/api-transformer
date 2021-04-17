@@ -15,7 +15,7 @@ class App<T extends BaseModule> {
   config: IConfig;
   redis: Redis;
 
-  constructor(Modules: (new (config: IConfig) => T)[]) {
+  constructor(Modules: (new (config: IConfig, redis: Redis) => T)[]) {
     this.app = express();
     this.config = Config.getConfig();
 
