@@ -60,4 +60,30 @@ describe('SportController', () => {
       expect(mockedNext).to.have.been.calledOnce;
     });
   });
+
+  describe('#getSportsInAllLanguages', () => {
+    it('should call the mockedRes status function with 200', async () => {
+      mockedSportService.getAllSportsInAllLanguages.resolves(getAllSportResult);
+
+      await sportController.getSportsInAllLanguages(mockedReq, mockedRes, mockedNext);
+
+      expect(mockedRes.status).to.have.been.calledWith(200);
+    });
+
+    it('should append the response with all the sports', async () => {
+      mockedSportService.getAllSportsInAllLanguages.resolves(getAllSportResult);
+
+      await sportController.getSportsInAllLanguages(mockedReq, mockedRes, mockedNext);
+
+      expect(mockedRes.send).to.have.been.calledWith({ result: { sports: getAllSportResult } });
+    });
+
+    it('should call the mockedNext if the getAllSportsInAllLanguages function rejects', async () => {
+      mockedSportService.getAllSportsInAllLanguages.rejects();
+
+      await sportController.getSportsInAllLanguages(mockedReq, mockedRes, mockedNext);
+
+      expect(mockedNext).to.have.been.calledOnce;
+    });
+  });
 });

@@ -25,4 +25,18 @@ export default class SportController {
       next(error);
     }
   };
+
+  getSportsInAllLanguages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const foundSports: ISport[] = await this.sportService.getAllSportsInAllLanguages();
+
+      res.status(200).send({
+        result: {
+          sports: foundSports
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
