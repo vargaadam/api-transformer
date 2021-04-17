@@ -1,12 +1,16 @@
 import https, { RequestOptions } from 'https';
+import { Redis } from 'ioredis';
+
 import { HttpException } from '../exceptions';
 import { ELanguages } from '../interfaces';
 
 export default class EventsApi {
   baseUrl: string;
+  redis: Redis;
 
-  constructor(baseUrl) {
+  constructor(baseUrl, redis) {
     this.baseUrl = baseUrl;
+    this.redis = redis;
   }
 
   getRawEvents(lang: ELanguages = ELanguages.ENGLISH): Promise<any> {

@@ -21,7 +21,7 @@ export default class EventsModule extends BaseModule {
   constructor(config: IConfig, redis: Redis) {
     super(config, redis);
 
-    this.eventsApi = new EventsApi(config.EVENTS_API_BASE_URL);
+    this.eventsApi = new EventsApi(config.EVENTS_API_BASE_URL, redis);
     this.service = new EventService(this.eventsApi);
     this.controller = new EventController(this.service);
   }
