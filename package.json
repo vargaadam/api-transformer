@@ -14,6 +14,9 @@
   "keywords": [],
   "author": "Adam Varga",
   "license": "ISC",
+  "engines": {
+    "node": ">=12.4"
+  },
   "dependencies": {
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
