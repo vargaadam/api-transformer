@@ -13,7 +13,7 @@ export default class SportService {
     return this.findAllSports(lang);
   }
 
-  async getAllSportsInAllLanguage(): Promise<ISport[]> {
+  async getAllSportsInAllLanguages(): Promise<ISport[]> {
     const foundSports = await Promise.all(Object.values(ELanguages).map((language) => this.findAllSports(language)));
     return foundSports.flat();
   }

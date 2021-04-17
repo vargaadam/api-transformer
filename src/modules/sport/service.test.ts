@@ -65,13 +65,13 @@ describe('SportService', () => {
     it('should return with sports in all languages', async () => {
       expectedResult = supportedLanguages.map(() => expectedResult).flat();
 
-      const res = await sportService.getAllSportsInAllLanguage();
+      const res = await sportService.getAllSportsInAllLanguages();
 
       expect(res).to.eql(expectedResult);
     });
 
     it('should call the mockedEventsApi getRawEvents function as many times as there are supported languages', async () => {
-      await sportService.getAllSportsInAllLanguage();
+      await sportService.getAllSportsInAllLanguages();
 
       expect(mockedEventsApi.getRawEvents).to.have.callCount(supportedLanguages.length);
     });
