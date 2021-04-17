@@ -18,7 +18,7 @@ let rawEventsResult;
 describe('E2E tests', () => {
   before(() => {
     app = new App<BaseModule>([SportModule, EventModule]);
-    server = app.listen();
+    server = app.listen(9090);
   });
 
   beforeEach(() => {

@@ -25,8 +25,8 @@ class App<T extends BaseModule> {
     this.initializeErrorHandling();
   }
 
-  listen(): Server {
-    return this.app.listen(this.config.APP_PORT, () => {
+  listen(port?: number): Server {
+    return this.app.listen(port || this.config.APP_PORT, () => {
       console.log(`server started at http://localhost:${this.config.APP_PORT}`);
     });
   }
