@@ -9,6 +9,7 @@ import cors from 'cors';
 import Config, { IConfig } from './config';
 import { errorMiddleware, i18nMiddleware } from './middlewares';
 import { BaseModule } from './modules';
+import RedisConnection from './redis';
 
 class App<T extends BaseModule> {
   app: Application;
@@ -36,7 +37,7 @@ class App<T extends BaseModule> {
   }
 
   private initializeRedis(): void {
-    this.redis = new redis(this.config.REDIS_URL);
+    this.redis = RedisConnection.connectToRedis(this.config.REDIS_URL);
   }
 
   private initializeMiddlewares(): void {
