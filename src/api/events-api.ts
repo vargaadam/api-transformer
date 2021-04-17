@@ -13,7 +13,7 @@ export default class EventsApi {
     this.redis = redis;
   }
 
-  getRawEvents(lang: ELanguages = ELanguages.ENGLISH): Promise<any> {
+  async getRawEvents(lang: ELanguages = ELanguages.ENGLISH): Promise<any> {
     const options: RequestOptions = {
       hostname: this.baseUrl,
       port: 443,
@@ -21,24 +21,34 @@ export default class EventsApi {
       method: 'GET'
     };
 
-    return new Promise((resolve, reject) => {
-      const req = https.request(options, (res) => {
-        if (res.statusCode < 200 || res.statusCode >= 300) {
-          return reject(new HttpException(res.statusCode, res.statusMessage));
-        }
+    let rawEvents = await this.redis.get(options.path);
 
-        const data = [];
+    if (!rawEvents) {
+      rawEvents = await new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            return reject(new HttpException(res.statusCode, res.statusMessage));
+          }
 
-        res.on('data', (d) => {
-          data.push(d);
+          const data = [];
+
+          res.on('data', (d) => {
+            data.push(d);
+          });
+
+          res.on('end', () => resolve(JSON.parse(Buffer.concat(data).toString())));
         });
 
-        res.on('end', () => resolve(JSON.parse(Buffer.concat(data).toString())));
+        req.on('error', reject);
+
+        req.end();
       });
 
-      req.on('error', reject);
+      await this.redis.set(options.path, JSON.stringify(rawEvents), 'EX', 10);
+    } else {
+      rawEvents = JSON.parse(rawEvents.toString());
+    }
 
-      req.end();
-    });
+    return rawEvents;
   }
 }
