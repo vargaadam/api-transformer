@@ -23,5 +23,6 @@ export default class SportModule extends BaseModule {
 
   initializeRoutes(app: Application) {
     app.get(this.path, this.controller.getSports);
+    app.get(`${this.path}/all-languages`, this.controller.getSportsInAllLanguages);
   }
 }

@@ -13,58 +13,7 @@ import { ELanguages } from './interfaces';
 let app: App<BaseModule>;
 let server: Server;
 
-const rawEventsResult = {
-  status: {},
-  result: {
-    total_number_of_events: 4,
-    sports: [
-      {
-        id: 1,
-        desc: 'Football',
-        comp: [
-          {
-            id: 1,
-            desc: 'compDesc2',
-            events: [
-              {
-                id: 1,
-                sport_id: 1,
-                desc: 'eventDesc1'
-              },
-              {
-                id: 2,
-                sport_id: 2,
-                desc: 'eventDesc2'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: 2,
-        desc: 'Hockey',
-        comp: [
-          {
-            id: 2,
-            desc: 'compDesc2',
-            events: [
-              {
-                id: 3,
-                sport_id: 2,
-                desc: 'eventDesc3'
-              },
-              {
-                id: 4,
-                sport_id: 1,
-                desc: 'eventDesc4'
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-};
+let rawEventsResult;
 
 describe('E2E tests', () => {
   before(() => {
@@ -73,6 +22,58 @@ describe('E2E tests', () => {
   });
 
   beforeEach(() => {
+    rawEventsResult = {
+      status: {},
+      result: {
+        total_number_of_events: 4,
+        sports: [
+          {
+            id: 1,
+            desc: 'Football',
+            comp: [
+              {
+                id: 1,
+                desc: 'compDesc2',
+                events: [
+                  {
+                    id: 1,
+                    sport_id: 1,
+                    desc: 'eventDesc1'
+                  },
+                  {
+                    id: 2,
+                    sport_id: 2,
+                    desc: 'eventDesc2'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            id: 2,
+            desc: 'Hockey',
+            comp: [
+              {
+                id: 2,
+                desc: 'compDesc2',
+                events: [
+                  {
+                    id: 3,
+                    sport_id: 2,
+                    desc: 'eventDesc3'
+                  },
+                  {
+                    id: 4,
+                    sport_id: 1,
+                    desc: 'eventDesc4'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    };
     sinon.stub(EventsApi.prototype, 'getRawEvents').resolves(rawEventsResult);
   });
 
@@ -97,7 +98,7 @@ describe('E2E tests', () => {
 
   describe('#/sports', () => {
     describe('GET', () => {
-      it('should return all the sport with status 200', (done) => {
+      it('should return all the sports with status 200', (done) => {
         request(server)
           .get('/sports')
           .expect(
@@ -114,6 +115,38 @@ describe('E2E tests', () => {
                     desc: 'Hockey'
                   }
                 ]
+              }
+            },
+            done
+          );
+      });
+    });
+  });
+
+  describe('#/sports/all-languages', () => {
+    const supportedLanguages = Object.values(ELanguages);
+    const expectedResult = supportedLanguages
+      .map(() => [
+        {
+          id: 1,
+          desc: 'Football'
+        },
+        {
+          id: 2,
+          desc: 'Hockey'
+        }
+      ])
+      .flat();
+
+    describe('GET', () => {
+      it('should return all the sports in all languages with status 200', (done) => {
+        request(server)
+          .get('/sports/all-languages')
+          .expect(
+            200,
+            {
+              result: {
+                sports: expectedResult
               }
             },
             done
