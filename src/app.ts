@@ -19,7 +19,7 @@ class App<T extends BaseModule> {
     this.app = express();
     this.config = Config.getConfig();
 
-    this.initializeRedis(this.config.REDIS_URL);
+    this.initializeRedis();
     this.initializeMiddlewares();
     this.initializeModules(Modules);
     this.initializeErrorHandling();
@@ -35,8 +35,8 @@ class App<T extends BaseModule> {
     return this.app;
   }
 
-  private initializeRedis(redisUrl): void {
-    this.redis = new redis(redisUrl);
+  private initializeRedis(): void {
+    this.redis = new redis(this.config.REDIS_URL);
   }
 
   private initializeMiddlewares(): void {
@@ -53,9 +53,9 @@ class App<T extends BaseModule> {
     this.app.use(i18nMiddleware);
   }
 
-  private initializeModules(Modules: (new (config: IConfig) => T)[]) {
+  private initializeModules(Modules: (new (config: IConfig, redis) => T)[]) {
     Modules.forEach((Module) => {
-      const module = new Module(this.config);
+      const module = new Module(this.config, this.redis);
       module.initializeRoutes(this.app);
     });
   }

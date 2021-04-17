@@ -1,4 +1,5 @@
 import { Application } from 'express';
+import { Redis } from 'ioredis';
 import { BaseModule } from '..';
 
 import { IConfig } from '../../config';
@@ -13,8 +14,8 @@ export default class SportModule extends BaseModule {
   service: SportService;
   eventsApi: EventsApi;
 
-  constructor(config: IConfig) {
-    super(config);
+  constructor(config: IConfig, redis: Redis) {
+    super(config, redis);
 
     this.eventsApi = new EventsApi(config.EVENTS_API_BASE_URL);
     this.service = new SportService(this.eventsApi);

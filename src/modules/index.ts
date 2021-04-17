@@ -1,4 +1,5 @@
 import { Application } from 'express';
+import { Redis } from 'ioredis';
 import { IConfig } from '../config';
 
 export abstract class BaseModule {
@@ -6,9 +7,11 @@ export abstract class BaseModule {
   abstract controller: any;
   abstract service: any;
   config: IConfig;
+  redis: Redis;
 
-  constructor(config: IConfig) {
+  constructor(config: IConfig, redis: Redis) {
     this.config = config;
+    this.redis = redis;
   }
 
   abstract initializeRoutes(app: Application): void;
