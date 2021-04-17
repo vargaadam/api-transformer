@@ -2,39 +2,22 @@ import { expect } from 'chai';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
 import EventsApi from '../../api/events-api';
+import { ELanguages } from '../../interfaces';
 
 import SportService from './service';
 
 let mockedEventsApi: SinonStubbedInstance<EventsApi>;
 let sportService: SportService;
 
-const rawEventsResult = {
-  status: {},
-  result: {
-    total_number_of_events: 2,
-    sports: [
-      {
-        id: 1,
-        desc: 'Football',
-        comp: []
-      },
-      {
-        id: 2,
-        desc: 'Hockey',
-        comp: []
-      }
-    ]
-  }
-};
+let expectedResult;
+let rawEventsResult;
 
 describe('SportService', () => {
   beforeEach(() => {
     mockedEventsApi = sinon.createStubInstance(EventsApi);
     sportService = new SportService(mockedEventsApi);
-  });
 
-  describe('#getAllSports', () => {
-    const expectedResult = [
+    expectedResult = [
       {
         id: 1,
         desc: 'Football'
@@ -45,6 +28,16 @@ describe('SportService', () => {
       }
     ];
 
+    rawEventsResult = {
+      status: {},
+      result: {
+        total_number_of_events: 2,
+        sports: expectedResult
+      }
+    };
+  });
+
+  describe('#getAllSports', () => {
     beforeEach(() => {
       mockedEventsApi.getRawEvents.resolves(rawEventsResult);
     });
@@ -59,6 +52,28 @@ describe('SportService', () => {
       await sportService.getAllSports();
 
       expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
+    });
+  });
+
+  describe('#getAllSportsInAllLanguage', () => {
+    const supportedLanguages = Object.values(ELanguages);
+
+    beforeEach(() => {
+      mockedEventsApi.getRawEvents.resolves(rawEventsResult);
+    });
+
+    it('should return with sports in all languages', async () => {
+      expectedResult = supportedLanguages.map(() => expectedResult).flat();
+
+      const res = await sportService.getAllSportsInAllLanguage();
+
+      expect(res).to.eql(expectedResult);
+    });
+
+    it('should call the mockedEventsApi getRawEvents function as many times as there are supported languages', async () => {
+      await sportService.getAllSportsInAllLanguage();
+
+      expect(mockedEventsApi.getRawEvents).to.have.callCount(supportedLanguages.length);
     });
   });
 });

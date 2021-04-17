@@ -32,7 +32,7 @@ describe('SportController', () => {
     mockedNext = sinon.stub();
 
     mockedSportService = sinon.createStubInstance(SportService);
-    sportController = new SportController(mockedSportService);
+    sportController = new SportController(mockedSportService as any);
   });
 
   describe('#getSports', () => {
