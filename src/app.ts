@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import { Server } from 'http';
+import redis, { Redis } from 'ioredis';
 
 import helmet from 'helmet';
 import compression from 'compression';
@@ -12,11 +13,13 @@ import { BaseModule } from './modules';
 class App<T extends BaseModule> {
   app: Application;
   config: IConfig;
+  redis: Redis;
 
   constructor(Modules: (new (config: IConfig) => T)[]) {
     this.app = express();
     this.config = Config.getConfig();
 
+    this.initializeRedis(this.config.REDIS_URL);
     this.initializeMiddlewares();
     this.initializeModules(Modules);
     this.initializeErrorHandling();
@@ -28,8 +31,12 @@ class App<T extends BaseModule> {
     });
   }
 
-  getServer() {
+  getServer(): Express.Application {
     return this.app;
+  }
+
+  private initializeRedis(redisUrl): void {
+    this.redis = new redis(redisUrl);
   }
 
   private initializeMiddlewares(): void {
