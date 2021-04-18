@@ -25,11 +25,13 @@ const rawEventsResult = {
               {
                 id: 1,
                 sport_id: 1,
+                pos: 2,
                 desc: 'eventDesc1'
               },
               {
                 id: 2,
                 sport_id: 2,
+                pos: 3,
                 desc: 'eventDesc2'
               }
             ]
@@ -47,11 +49,13 @@ const rawEventsResult = {
               {
                 id: 3,
                 sport_id: 2,
+                pos: 1,
                 desc: 'eventDesc3'
               },
               {
                 id: 4,
                 sport_id: 1,
+                pos: 4,
                 desc: 'eventDesc4'
               }
             ]
@@ -76,23 +80,27 @@ describe('EventService', () => {
         total_number_of_events: 4,
         events: [
           {
+            id: 3,
+            sport_id: 2,
+            pos: 1,
+            desc: 'eventDesc3'
+          },
+          {
             id: 1,
             sport_id: 1,
+            pos: 2,
             desc: 'eventDesc1'
           },
           {
             id: 2,
             sport_id: 2,
+            pos: 3,
             desc: 'eventDesc2'
-          },
-          {
-            id: 3,
-            sport_id: 2,
-            desc: 'eventDesc3'
           },
           {
             id: 4,
             sport_id: 1,
+            pos: 4,
             desc: 'eventDesc4'
           }
         ]
@@ -116,11 +124,13 @@ describe('EventService', () => {
           {
             id: 1,
             sport_id: 1,
+            pos: 2,
             desc: 'eventDesc1'
           },
           {
             id: 4,
             sport_id: 1,
+            pos: 4,
             desc: 'eventDesc4'
           }
         ]
@@ -141,6 +151,13 @@ describe('EventService', () => {
         'There are no events for the given sportId'
       );
     });
+
+    it('should order the events by the pos prop', async () => {
+      const { events } = await eventService.getAllEvents();
+
+      expect(events[0].pos).to.eql(1);
+      expect(events[1].pos).to.eql(2);
+    });
   });
 
   describe('#getEventById', () => {
@@ -150,6 +167,7 @@ describe('EventService', () => {
       const expectedResult = {
         id: 4,
         sport_id: 1,
+        pos: 4,
         desc: 'eventDesc4'
       };
 

@@ -15,7 +15,7 @@ export default class EventService {
   async getAllEvents(sportId?: number, lang?: ELanguages): Promise<IEventResult> {
     const { result } = await this.eventsApi.getRawEvents(lang);
 
-    let events = parseResponseBody(result.sports, ['comp', 'events']);
+    let events: IEvent[] = parseResponseBody(result.sports, ['comp', 'events']);
 
     if (sportId) {
       events = events.filter((event) => event.sport_id === sportId);
@@ -24,6 +24,10 @@ export default class EventService {
         throw new NotFoundException(`There are no events for the given sportId`);
       }
     }
+
+    events = events.sort((a, b) => {
+      return a.pos - b.pos;
+    });
 
     return {
       total_number_of_events: events.length,
