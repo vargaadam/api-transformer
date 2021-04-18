@@ -1,6 +1,6 @@
 import express, { Application } from 'express';
 import { Server } from 'http';
-import redis, { Redis } from 'ioredis';
+import { Redis } from 'ioredis';
 
 import helmet from 'helmet';
 import compression from 'compression';

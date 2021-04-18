@@ -1,6 +1,6 @@
 import App from './app';
 import { Server } from 'http';
-import sinon, { SinonStub } from 'sinon';
+import sinon from 'sinon';
 import request from 'supertest';
 
 import EventsApi from './api/events-api';
