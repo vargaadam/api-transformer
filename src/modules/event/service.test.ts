@@ -26,13 +26,15 @@ const rawEventsResult = {
                 id: 1,
                 sport_id: 1,
                 pos: 2,
-                desc: 'eventDesc1'
+                desc: 'eventDesc1',
+                markets: []
               },
               {
                 id: 2,
                 sport_id: 2,
                 pos: 3,
-                desc: 'eventDesc2'
+                desc: 'eventDesc2',
+                markets: []
               }
             ]
           }
@@ -50,13 +52,15 @@ const rawEventsResult = {
                 id: 3,
                 sport_id: 2,
                 pos: 1,
-                desc: 'eventDesc3'
+                desc: 'eventDesc3',
+                markets: []
               },
               {
                 id: 4,
                 sport_id: 1,
                 pos: 4,
-                desc: 'eventDesc4'
+                desc: 'eventDesc4',
+                markets: []
               }
             ]
           }
@@ -75,7 +79,7 @@ describe('EventService', () => {
   });
 
   describe('#getAllEvents', () => {
-    it('should return with events without the competitions', async () => {
+    it('should return with events without the markets', async () => {
       const expectedResult = {
         total_number_of_events: 4,
         events: [

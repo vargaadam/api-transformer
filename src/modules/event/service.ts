@@ -15,7 +15,7 @@ export default class EventService {
   async getAllEvents(sportId?: number, lang?: ELanguages): Promise<IEventResult> {
     const { result } = await this.eventsApi.getRawEvents(lang);
 
-    let events: IEvent[] = parseResponseBody(result.sports, ['comp', 'events']);
+    let events: IEvent[] = parseResponseBody(result.sports, ['comp', 'events'], ['markets']);
 
     if (sportId) {
       events = events.filter((event) => event.sport_id === sportId);
@@ -38,7 +38,7 @@ export default class EventService {
   async getEventById(eventId: number, lang?: ELanguages): Promise<IEvent> {
     const { result } = await this.eventsApi.getRawEvents(lang);
 
-    const events = parseResponseBody(result.sports, ['comp', 'events']);
+    const events = parseResponseBody(result.sports, ['comp', 'events'], ['markets']);
 
     const foundEvent = events.find((event) => event.id === eventId);
 
