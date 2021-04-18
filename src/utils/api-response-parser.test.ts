@@ -11,7 +11,8 @@ describe('ApiParser', () => {
           child: [{ childParam: 'childParam' }, { childParam: 'childParam2' }]
         }
       ];
-      const result = parseResponseBody(validDataObjects, ['child']);
+
+      const result = parseResponseBody(validDataObjects, ['child'], []);
 
       expect(result).to.eql([{ childParam: 'childParam' }, { childParam: 'childParam2' }]);
     });
@@ -47,7 +48,7 @@ describe('ApiParser', () => {
         }
       ];
 
-      const result = parseResponseBody(validDataObjects, ['child', 'nestedChild']);
+      const result = parseResponseBody(validDataObjects, ['child', 'nestedChild'], []);
 
       expect(result).to.eql([
         {
@@ -73,7 +74,7 @@ describe('ApiParser', () => {
         }
       ];
 
-      expect(() => parseResponseBody(invalidDataObject, ['notExist'])).to.throw(Error, /not exist/);
+      expect(() => parseResponseBody(invalidDataObject, ['notExist'], [])).to.throw(Error, /not exist/);
     });
 
     it('should throw an Error when the child key is not an array', () => {
@@ -84,7 +85,42 @@ describe('ApiParser', () => {
         }
       ];
 
-      expect(() => parseResponseBody(invalidDataObject, ['invalidChild'])).to.throw(Error, /invalid/);
+      expect(() => parseResponseBody(invalidDataObject, ['invalidChild'], [])).to.throw(Error, /invalid/);
+    });
+
+    it('should remove the given keys from the object', () => {
+      const validDataObjects = [
+        {
+          param1: 'param1',
+          paramToRemove: 'paramToRemove',
+          child: [{ childParam: 'childParam' }, { childParam: 'childParam2' }]
+        }
+      ];
+
+      const result = parseResponseBody(validDataObjects, [], ['paramToRemove']);
+
+      expect(result).to.eql([
+        {
+          param1: 'param1',
+          child: [{ childParam: 'childParam' }, { childParam: 'childParam2' }]
+        }
+      ]);
+    });
+
+    it('should remove the given keys from the child object', () => {
+      const validDataObjects = [
+        {
+          param1: 'param1',
+          child: [
+            { childParam: 'childParam', paramToRemove: 'paramToRemove', paramToRemove2: 'paramToRemove2' },
+            { childParam: 'childParam2', paramToRemove: 'paramToRemove', paramToRemove2: 'paramToRemove2' }
+          ]
+        }
+      ];
+
+      const result = parseResponseBody(validDataObjects, ['child'], ['paramToRemove', 'paramToRemove2']);
+
+      expect(result).to.eql([{ childParam: 'childParam' }, { childParam: 'childParam2' }]);
     });
   });
 });
