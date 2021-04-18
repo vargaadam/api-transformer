@@ -20,11 +20,13 @@ describe('SportService', () => {
     expectedResult = [
       {
         id: 1,
-        desc: 'Football'
+        desc: 'Football',
+        pos: 2
       },
       {
         id: 2,
-        desc: 'Hockey'
+        desc: 'Hockey',
+        pos: 1
       }
     ];
 
@@ -45,13 +47,20 @@ describe('SportService', () => {
     it('should return with sports without the competitions', async () => {
       const res = await sportService.getAllSports();
 
-      expect(res).to.eql(expectedResult);
+      expect(res).to.deep.equalInAnyOrder(expectedResult);
     });
 
     it('should call the mockedEventsApi getRawEvents function', async () => {
       await sportService.getAllSports();
 
       expect(mockedEventsApi.getRawEvents).to.have.been.calledOnce;
+    });
+
+    it('should order the sports by the pos prop', async () => {
+      const sports = await sportService.getAllSports();
+
+      expect(sports[0].pos).to.eql(1);
+      expect(sports[1].pos).to.eql(2);
     });
   });
 
@@ -67,13 +76,20 @@ describe('SportService', () => {
 
       const res = await sportService.getAllSportsInAllLanguages();
 
-      expect(res).to.eql(expectedResult);
+      expect(res).to.deep.equalInAnyOrder(expectedResult);
     });
 
     it('should call the mockedEventsApi getRawEvents function as many times as there are supported languages', async () => {
       await sportService.getAllSportsInAllLanguages();
 
       expect(mockedEventsApi.getRawEvents).to.have.callCount(supportedLanguages.length);
+    });
+
+    it('should order the sports by the pos prop', async () => {
+      const sports = await sportService.getAllSportsInAllLanguages();
+
+      expect(sports[0].pos).to.eql(1);
+      expect(sports[supportedLanguages.length].pos).to.eql(2);
     });
   });
 });

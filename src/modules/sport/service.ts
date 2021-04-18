@@ -10,12 +10,25 @@ export default class SportService {
   }
 
   async getAllSports(lang?: ELanguages): Promise<ISport[]> {
-    return this.findAllSports(lang);
+    let sports = await this.findAllSports(lang);
+
+    sports = sports.sort((a, b) => {
+      return a.pos - b.pos;
+    });
+
+    return sports;
   }
 
   async getAllSportsInAllLanguages(): Promise<ISport[]> {
-    const foundSports = await Promise.all(Object.values(ELanguages).map((language) => this.findAllSports(language)));
-    return foundSports.flat();
+    let foundSports = (
+      await Promise.all(Object.values(ELanguages).map((language) => this.findAllSports(language)))
+    ).flat();
+
+    foundSports = foundSports.sort((a, b) => {
+      return a.pos - b.pos;
+    });
+
+    return foundSports;
   }
 
   private async findAllSports(lang?: ELanguages): Promise<ISport[]> {
